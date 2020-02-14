@@ -1,11 +1,7 @@
-const express = require ('express');
-const bodyParser = require ('body-parser');
+import React from 'react';
+import Routes from './routes';
+//import './config/StatusBarConfig';
 
-const app = express();
+const App = () => <Routes />;
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended : false }));
-
-require('./app/controllers/index')(app);
-
-app.listen(3000);
+export default App;
