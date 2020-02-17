@@ -6,7 +6,6 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback, 
   Text, 
   View,
   Button,
@@ -57,7 +56,10 @@ export default class Login extends Component {
 
       this.setState({ loggedInUser: user });
 
-      Alert.alert('','Login com sucesso!');
+      Alert.alert( '' ,'Login realizado com sucesso!', [{
+        text: 'Ok',
+        onPress: () => this.props.navigation.navigate('Home'),
+      }]);
       
     }catch (response) {
       console.log(response);
@@ -97,7 +99,7 @@ export default class Login extends Component {
         </View>
 
         {!!this.state.errorMessage && <Text style = {styles.errorText}>{this.state.errorMessage}</Text>}
-        <View style={styles.containerButton}>
+        <View>
           
           <TouchableOpacity
             style = {styles.button}

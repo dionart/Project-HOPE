@@ -8,12 +8,14 @@ const User = require ('../models/user');
 
 const router = express.Router();
 
+//Função para gerar o token de autenticação
 function generateToken(params = {}){
     return jwt.sign(params, authConfig.secret,{
         expiresIn : 86400
     });
 }
 
+//Registro de usuário
 router.post('/register', async(req, res)=>{
     const {email} = req.body;
     
@@ -36,6 +38,7 @@ router.post('/register', async(req, res)=>{
     }
 });
 
+//Autenticação de usuário
 router.post('/authenticate', async(req, res) =>{
     const {email, password}= req.body;
 
@@ -57,6 +60,7 @@ router.post('/authenticate', async(req, res) =>{
 
 });
 
+//Função de ''esqueci minha senha''
 router.post('/forgot_password', async (req, res) => {
     const {email} = req.body;
 
@@ -98,6 +102,7 @@ router.post('/forgot_password', async (req, res) => {
     }
 });
 
+//Função de troca de senha
 router.post('/reset_password', async (req,res) => {
     const{email ,token, password} = req.body ;
 
@@ -126,6 +131,37 @@ router.post('/reset_password', async (req,res) => {
         return res.status(400).send({error: 'Could not reset password, try again'})
     }
 
+});
+
+//Função para usuário receber permissão de administrador
+router.post('/user_admin', async(req, res) =>{
+    try {
+        const {email, password } = req.body;
+
+        const user = await User.findOne({email}).select('+password');
+
+        if(!user)
+            return res.status(400).send({error: 'Usuário não encontrado'});
+
+        if(!await bcrypt.compare(password, user.password))
+            return res.status(400).send({error: 'Senha incorreta'});
+
+        await User.findByIdAndUpdate(user._id, {
+            name: user.name,
+            email: user.email,
+            password: user.password,
+            passwordResetToken: user.passwordResetToken,
+            passwordResetExpires: user.passwordResetExpires,
+            createdAt: user.createdAt,
+            isAdmin: true,
+            pic: user.pic
+        }, { new: true});
+
+        res.send('Usuário agora é um administrador');
+    } catch (err) {
+        console.log(err)
+        return res.status(400).send({error: 'Falha na permissão'});
+    }
 });
 
 module.exports = app => app.use('/auth', router);

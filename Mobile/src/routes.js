@@ -19,7 +19,10 @@ export default createStackNavigator({
     },
     ChangePassword:{
         screen: ChangePassword
-    }
+    },
+    Home:{
+        screen: Home
+    },
 }, {
     navigationOptions:{
         headerStyle: {

@@ -110,6 +110,7 @@ export default class newUser extends Component {
           <TouchableOpacity
             style = {styles.button}
             onPress = { () => this.Register(this.state.name ,this.state.email, this.state.password)}
+            onPress = { () => this.props.navigation.navigate('Login') }
           >
             <Text style = {styles.buttonText} >CADASTRAR</Text>
           </TouchableOpacity>

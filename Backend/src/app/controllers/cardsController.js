@@ -7,17 +7,8 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
-router.get('/', async (req, res)=>{
-    try {
-        const cards = await Cards.find()
-
-        return res.send({cards});
-
-    } catch (err) {
-        return res.status(400).send({error: 'Erro carregando cards'});
-    }
-}); 
-
+//CRUD
+//Função Create
 router.post('/register_card', async (req, res) => {
     try {
         const { title, type, description, content} = req.body;
@@ -32,6 +23,19 @@ router.post('/register_card', async (req, res) => {
     }
 });
 
+//Função Read
+router.get('/', async (req, res)=>{
+    try {
+        const cards = await Cards.find()
+
+        return res.send({cards});
+
+    } catch (err) {
+        return res.status(400).send({error: 'Erro carregando cards'});
+    }
+}); 
+
+//Função Update
 router.put('/:cardId', async (req, res) => {
     try {
         const { title, type, description, content } = req.body;
@@ -51,6 +55,7 @@ router.put('/:cardId', async (req, res) => {
     }
 });
 
+//Função Delete
 router.delete('/:cardId', async (req, res) => {
     try {
         const card = await Cards.findByIdAndRemove(req.params.cardId);
