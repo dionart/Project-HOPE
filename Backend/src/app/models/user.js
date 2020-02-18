@@ -25,6 +25,13 @@ const UserSchema = new mongoose.Schema({
     passwordResetExpires:{
         select: false,
     },
+    pic: {
+        type: String,
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false,
+    },
     createdAt:{
         type: Date,
         default: Date.now,

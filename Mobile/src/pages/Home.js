@@ -42,6 +42,7 @@ export default class Home extends Component {
     this.setState({didWillFocusSubscription});
   }
 
+  //Inicia os estados como null
   state = {
     cards: null,
     loggedInUser: null,
@@ -49,23 +50,27 @@ export default class Home extends Component {
     didWillFocusSubscription: null,
   }
 
+  //Função para ler cards postados
   readCards = async () => {
     const token = await AsyncStorage.getItem('@CodeApi:token');
+    //Consome a api
     const response = await api.get('/cards/', {}, { headers: { Authorization: `Bearer ${token}` }});
     const cards =  response.data.cards;
-
     this.setState({cards});
   }
 
   async componentDidMount() {
+    //Recebe o token e usuários armazenados no login
     const token = await AsyncStorage.getItem('@CodeApi:token');
     const user = JSON.parse(await AsyncStorage.getItem('@CodeApi:user'));
 
+    //Se ambos forem verdadeiro o usuário está logado
     if(token && user) {
       this.setState({ loggedInUser: user });
     }
   };
 
+  //Função de espera, atualização e exibição dos cards
   getCards = () => {
     wait(5000).then(() => this.setState({isLoading: true})).then(() => this.setState({isLoading: false}));
     this.readCards();
@@ -75,6 +80,7 @@ export default class Home extends Component {
     this.readCards();
   }
 
+  //Estilização da pagina mobile
   render(){
     if(!this.state.cards){
         return null;
@@ -104,8 +110,8 @@ export default class Home extends Component {
                     >
                       <Image
                         source={this.state.loggedInUser &&
-                          this.state.loggedInUser.avatar ? 
-                          {uri: this.state.loggedInUser.avatar} : 
+                          this.state.loggedInUser.pic ? 
+                          {uri: this.state.loggedInUser.pic} : 
                           require('../pics/defaultUser2.png')}
                         style={styles.iconUser}
                       />
@@ -305,19 +311,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 60,
     height: 60,
-    borderWidth: 4,
-    borderColor: 'rgb(62, 6, 136)',
+    borderWidth: 5,
+    borderColor: '#44059E',
     borderRadius: 100,
   },
   iconUser: {
-    height: 45,
-    width: 45,
+    height: 50,
+    width: 50,
     borderRadius: 100,
   },
   textHeader: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'rgb(62, 6, 136)',
+    color: '#44059E',
   },
   //card dicas
   dicas: {
@@ -363,7 +369,7 @@ const styles = StyleSheet.create({
   textButton: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: 'rgb(62, 6, 136)',
+    color: '#44059E',
   },
   title: {
     fontSize: 18,
@@ -417,7 +423,7 @@ const styles = StyleSheet.create({
   motivacional: {
     height: 200,
     marginBottom: 20,
-    backgroundColor: 'rgb(62, 6, 136)',
+    backgroundColor: '#44059E',
     alignItems: 'center',
     borderRadius: 15,
     marginHorizontal: 15,

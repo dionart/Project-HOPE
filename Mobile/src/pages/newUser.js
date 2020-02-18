@@ -1,28 +1,28 @@
 import React, {Component} from 'react';
 
 import { 
-  Platform,
   StyleSheet,
   Image,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback, 
+  KeyboardAvoidingView, 
   Text, 
   View,
   Button,
-  StatusBar,
-  ActivityIndicator,
-  AsyncStorage,
+  ScrollView,
   Alert,
   } from 'react-native';
 
 import api from '../services/api';
 
+//Criação de novo Usuário
 export default class newUser extends Component {
+  //ignora o header
   static navigationOptions = {
     header: null,
   };
   
+  //Define os estados como null
   state = {
     loggedInUser: null,
     errorMessage: null,
@@ -31,6 +31,7 @@ export default class newUser extends Component {
     password: '',
   };
 
+  //Sobrescreve oque está sendo digitado no input box
   onChangeTextName = (event) => {
     event.persist();
     this.setState({ name:event.nativeEvent.text });
@@ -46,16 +47,23 @@ export default class newUser extends Component {
     this.setState({ password:event.nativeEvent.text });
   };
 
+  //Função de registro através dos parametros
   Register = async (name, email, password) => {
   
+    //Preenche os models do usuário
     try {
+      //Consome a api
       const response = await api.post('/auth/register', {
         name,
         email,
         password,
       }); 
 
-      Alert.alert('','Conta criada com sucesso!');
+      Alert.alert( '' ,'Conta criada com sucesso!', [{
+        text: 'Ok',
+        //Mudança de página ao apertar o Alert
+        onPress: () => this.props.navigation.navigate('Login')
+      }]);
       
     }catch (response) {
       console.log(response);
@@ -63,93 +71,85 @@ export default class newUser extends Component {
     }
   };
   
+  //Estilização da página mobile
   render(){
     return (
-      <View style = {styles.container}>
-
-        <Image
-          style = {styles.logo}
-          source = {require('../pics/logo.png')}
-        />
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={"padding"} // you can change that by using Platform
         
-        <View>
-          
-          <TextInput
-            placeholder = 'Nome'
-            placeholderTextColor = '#736a86'
-            style = {styles.placeholder}
-            onChange = {this.onChangeTextName}
-          > 
-
-          </TextInput>
-
-          <TextInput
-            placeholder = 'E-mail'
-            placeholderTextColor = '#736a86'
-            style = {styles.placeholder}
-            onChange = {this.onChangeTextEmail}
-          > 
-
-          </TextInput>
-        
-          <TextInput
-            placeholder = 'Senha'
-            placeholderTextColor = '#736a86'
-            secureTextEntry = {true}
-            style = {styles.placeholder}
-            onChange = {this.onChangeTextPassword}
-          >
+      >
+        <ScrollView>
+          <View style = {styles.test}>
+            <Image
+              style = {styles.logo}
+              source = {require('../pics/logo.png')}
+            />
+          </View>
+          <View >
             
-          </TextInput>
-        
-        </View>
+            <TextInput
+              placeholder = 'Nome'
+              placeholderTextColor = '#736a86'
+              style = {styles.placeholder}
+              onChange = {this.onChangeTextName}
+            > 
 
-        {!!this.state.errorMessage && <Text style = {styles.errorText}>{this.state.errorMessage}</Text>}
-        <View style={styles.containerButton}>
+            </TextInput>
+
+            <TextInput
+              placeholder = 'E-mail'
+              placeholderTextColor = '#736a86'
+              style = {styles.placeholder}
+              onChange = {this.onChangeTextEmail}
+            > 
+
+            </TextInput>
           
-          <TouchableOpacity
-            style = {styles.button}
-            onPress = { () => this.Register(this.state.name ,this.state.email, this.state.password)}
-            onPress = { () => this.props.navigation.navigate('Login') }
-          >
-            <Text style = {styles.buttonText} >CADASTRAR</Text>
-          </TouchableOpacity>
-
-        </View>
-
-        <View>
-          <TouchableOpacity
-            style = {styles.passwordButton}
-            onPress = { () => this.props.navigation.navigate('ForgotPassword') }
-          >
+            <TextInput
+              placeholder = 'Senha'
+              placeholderTextColor = '#736a86'
+              secureTextEntry = {true}
+              style = {styles.placeholder}
+              onChange = {this.onChangeTextPassword}
+            >
+              
+            </TextInput>
           
-          <Text style = {styles.passwordText}>
-            ESQUECI MINHA SENHA
-          </Text>
+          </View>
 
-          </TouchableOpacity>
+          {!!this.state.errorMessage && <Text style = {styles.errorText}>{this.state.errorMessage}</Text>}
+          <View style={styles.containerButton}>
+            
+            <TouchableOpacity
+              style = {styles.button}
+              onPress = { () => this.Register(this.state.name ,this.state.email.trim(), this.state.password)}
+              
+            >
+              <Text style = {styles.buttonText} >CADASTRAR</Text>
+            </TouchableOpacity>
 
-        </View>
+          </View>
 
-        <View style = {styles.newUserDisplay}>
-          
-          <Text style = {styles.newUser}>
-            JÁ É CADASTRADO?
-          </Text>
-
-        
-          <TouchableOpacity
-            style = {styles.newUserButton}
-            onPress = { () => this.props.navigation.navigate('Login') }
-          >
-            <Text style = {styles.newUserButtonText}>
-              FAZER LOGIN
+          <View style = {styles.newUserDisplay}>
+            
+            <Text style = {styles.newUser}>
+              JÁ É CADASTRADO?
             </Text>
 
-          </TouchableOpacity>
-        </View>
+          
+            <TouchableOpacity
+              style = {styles.newUserButton}
+              onPress = { () => this.props.navigation.navigate('Login') }
+            >
+              <Text style = {styles.newUserButtonText}>
+                FAZER LOGIN
+              </Text>
 
-      </View> 
+            </TouchableOpacity>
+          </View>
+          </ScrollView>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -160,10 +160,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingTop:110,
+  },
+  test:{
+    marginHorizontal:-50,
   },
   logo: {
-    marginTop:80,
+    alignContent:'center',
+    marginTop:180,
     width: 500,
     height: 150,
   },
@@ -171,6 +174,7 @@ const styles = StyleSheet.create({
     marginTop:15,
     paddingTop:11,
     paddingLeft:120,
+    marginLeft:29,
     backgroundColor: '#44059E',
     borderRadius: 8,
     height:50,
@@ -180,6 +184,7 @@ const styles = StyleSheet.create({
     color:'#FFF',
     fontSize:16,
     fontWeight: 'bold',
+    paddingLeft:4,
   },
   errorText:{
     color: '#c4342d',
@@ -190,6 +195,7 @@ const styles = StyleSheet.create({
     borderColor: '#E8E8E8',
     borderBottomWidth: 1.5,
     width: 340,
+    marginLeft:25,
     marginTop: 8,
     paddingTop: 10,
     padding: 10,
@@ -212,7 +218,8 @@ const styles = StyleSheet.create({
   },
   newUserDisplay:{
     flexDirection: 'row',
-    paddingTop:50,
+    paddingTop:90,
+    marginLeft:38,
   },
   newUser:{
     fontSize: 14,

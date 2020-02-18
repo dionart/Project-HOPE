@@ -10,11 +10,13 @@ module.exports = (req, res, next) => {
 
     const parts = authHeader.split(' ');
 
+    //Verifica se o token possui 2 partes
     if(!parts.split === 2)
         return res.status(401).send({ error: 'Token error '});
 
     const [scheme, token] = parts;
 
+    //Verifica a presença de bearer no token fornecido
     if(!/^Bearer$/i.test(scheme))
         return res.status(401).send({ error: 'Token unformated'});
 

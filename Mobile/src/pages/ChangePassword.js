@@ -10,19 +10,23 @@ import {
   Text, 
   View,
   Button,
-  StatusBar,
+  KeyboardAvoidingView,
   ActivityIndicator,
   AsyncStorage,
   Alert,
-  } from 'react-native';
+  ScrollView,
+} from 'react-native';
 
 import api from '../services/api';
 
+//Troca de senha
 export default class ChangePassword extends Component {
+  //Ignora o header
   static navigationOptions = {
     header: null,
   };
   
+  //Inicia os estados como null e vazio
   state = {
     loggedInUser: null,
     errorMessage: null,
@@ -31,12 +35,14 @@ export default class ChangePassword extends Component {
     password:'',
   };
 
+  //Salva o email preenchido no campo da página anterior 
   componentWillMount() {
     this.setState ({
         email: this.props.navigation.getParam('email')
     });
   }
 
+  //Sobrescreve oque está sendo digito na input box
   onChangeTextEmail = (event) => {
     event.persist();
     this.setState({ email:event.nativeEvent.text });
@@ -52,9 +58,11 @@ export default class ChangePassword extends Component {
     this.setState({ password:event.nativeEvent.text });
   };
 
+  //Função para mudança de senha com o email já fornecido,token e nova senha
   Change = async (email, token, password) => {
   
     try {
+        //Consome a api
         const response = await api.post('/auth/reset_password', {
         email,
         token,
@@ -72,84 +80,90 @@ export default class ChangePassword extends Component {
     }
   };
   
+  //Estilização da pagina mobile
   render(){
     return (
-      <View style = {styles.container}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={"padding"} 
         
-        <TouchableOpacity
-            style = {styles.buttonArrow}
-            onPress = { () => this.props.navigation.navigate('ForgotPassword')}
-        >
-            <Image
-                style = {styles.backArrow}
-                source = {require('../pics/voltar.png')}
-            />
-            
-        </TouchableOpacity>
-        
-        
-        <Image
-            style = {styles.logo}
-            source = {require('../pics/logo.png')}
-        />
-        
-        <View>
-
-          <TextInput
-            placeholder = 'Digite o código recebido'
-            placeholderTextColor = '#736a86'
-            style = {styles.placeholder}
-            onChange = {this.onChangeTextToken}
-          > 
-
-          </TextInput>
-
-          <TextInput
-            placeholder = 'Digite sua nova senha'
-            secureTextEntry = {true}
-            placeholderTextColor = '#736a86'
-            style = {styles.placeholder}
-            onChange = {this.onChangeTextPassword}
-          > 
-
-          </TextInput>
-        
-        </View>
-
-        {!!this.state.errorMessage && <Text style = {styles.errorText}>{this.state.errorMessage}</Text>}
-        <View style={styles.containerButton}>
-          
+      >
+        <ScrollView>
           <TouchableOpacity
-            style = {styles.button}
-            onPress={() => this.Change(this.state.email, this.state.token, this.state.password)}
-            
+              style = {styles.buttonArrow}
+              onPress = { () => this.props.navigation.navigate('ForgotPassword')}
           >
-            <Text style = {styles.buttonText} >REDEFINIR SENHA</Text>
-
+              <Image
+                  style = {styles.backArrow}
+                  source = {require('../pics/voltar.png')}
+              />
+              
           </TouchableOpacity>
-
-        </View>
-
-        <View style = {styles.newUserDisplay}>
           
-          <Text style = {styles.newUser}>
-            NÃO POSSUI CONTA?
-          </Text>
+          <View style = {styles.containerLogo}>
+            <Image
+                style = {styles.logo}
+                source = {require('../pics/logo.png')}
+            />
+          </View>
 
-        
-          <TouchableOpacity
-            style = {styles.newUserButton}
-            onPress = { () => this.props.navigation.navigate('NewUser') }
-          >
-            <Text style = {styles.newUserButtonText}>
-              CRIAR CONTA
+          <View>
+
+            <TextInput
+              placeholder = 'Digite o código recebido'
+              placeholderTextColor = '#736a86'
+              style = {styles.placeholder}
+              onChange = {this.onChangeTextToken}
+            > 
+
+            </TextInput>
+
+            <TextInput
+              placeholder = 'Digite sua nova senha'
+              secureTextEntry = {true}
+              placeholderTextColor = '#736a86'
+              style = {styles.placeholder}
+              onChange = {this.onChangeTextPassword}
+            > 
+
+            </TextInput>
+          
+          </View>
+
+          {!!this.state.errorMessage && <Text style = {styles.errorText}>{this.state.errorMessage}</Text>}
+          <View style={styles.containerButton}>
+            
+            <TouchableOpacity
+              style = {styles.button}
+              onPress={() => this.Change(this.state.email, this.state.token, this.state.password)}
+              
+            >
+              <Text style = {styles.buttonText} >REDEFINIR SENHA</Text>
+
+            </TouchableOpacity>
+
+          </View>
+
+          <View style = {styles.newUserDisplay}>
+            
+            <Text style = {styles.newUser}>
+              NÃO POSSUI CONTA?
             </Text>
 
-          </TouchableOpacity>
-        </View>
+          
+            <TouchableOpacity
+              style = {styles.newUserButton}
+              onPress = { () => this.props.navigation.navigate('NewUser') }
+            >
+              <Text style = {styles.newUserButtonText}>
+                CRIAR CONTA
+              </Text>
 
+            </TouchableOpacity>
+          </View>
 
-      </View> 
+        </ScrollView>
+      </KeyboardAvoidingView> 
     );
   }
 }
@@ -160,10 +174,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingTop:100,
   },
   logo: {
-    marginTop:50,
+    marginTop:180,
     width: 500,
     height: 150,
   },
@@ -172,9 +185,13 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
   },
+  containerLogo: {
+    marginHorizontal:-50,
+  },
   buttonArrow:{
     backgroundColor: '#FFF',
     borderRadius:8,
+    paddingTop:25,
     width: 40,
     alignSelf: 'flex-start',
     marginLeft: 25,
@@ -185,6 +202,7 @@ const styles = StyleSheet.create({
     paddingLeft:95,
     backgroundColor: '#44059E',
     borderRadius: 8,
+    marginLeft:29,
     height:50,
     width:330,
   },
@@ -196,6 +214,7 @@ const styles = StyleSheet.create({
   errorText:{
     color: '#c4342d',
     fontSize: 16,
+    paddingLeft:100,
     fontWeight: 'bold',
   },
   placeholder:{
@@ -203,6 +222,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1.5,
     width: 340,
     marginTop: 10,
+    marginLeft:25,
     paddingTop: 10,
     padding: 10,
     fontSize: 14,
@@ -220,6 +240,7 @@ const styles = StyleSheet.create({
   newUserDisplay:{
     flexDirection: 'row',
     paddingTop:100,
+    marginLeft:38,
   },
   newUser:{
     fontSize: 14,
