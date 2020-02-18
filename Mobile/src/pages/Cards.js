@@ -7,7 +7,6 @@ import {
     TextInput,
     TouchableOpacity,
     AsyncStorage,
-    FlatList,
     Image,
     Button,
     Alert,
@@ -73,90 +72,92 @@ export default class CreateCards extends Component {
 //Estilização da página mobile
     render() {
         return(
-            <View style = {styles.containerAll}>   
-                <View style = {styles.container}>
+            
+                <View style = {styles.containerAll}>   
+                    <View style = {styles.container}>
 
-                    <Text style={styles.textType} >
-                        Selecione um tipo de card:
-                    </Text>
+                        <Text style={styles.textType} >
+                            Selecione um tipo de card:
+                        </Text>
 
-                    <View style = {styles.containerPicker}>
-                        <Picker
-                            style={styles.picker}
-                            itemStyle={{fontSize: 50}}
-                            selectedValue={this.state.type}
-                            onValueChange={(itemValue, itemIndex) =>
-                                this.setState({type: itemValue})
-                            }
-                        >   
-                            <Picker.Item label = 'Tipos de card' value = {null} />
-                            <Picker.Item label = 'Dicas' value = 'dicas' />
-                            <Picker.Item label = 'Fatos' value = 'fatos'/>
-                            <Picker.Item label = 'Motivacional' value = 'motivacional'/>
+                        <View style = {styles.containerPicker}>
+                            <Picker
+                                style={styles.picker}
+                                itemStyle={{fontSize: 50}}
+                                selectedValue={this.state.type}
+                                onValueChange={(itemValue, itemIndex) =>
+                                    this.setState({type: itemValue})
+                                }
+                            >   
+                                <Picker.Item label = 'Tipos de card' value = {null} />
+                                <Picker.Item label = 'Dicas' value = 'dicas' />
+                                <Picker.Item label = 'Fatos' value = 'fatos'/>
+                                <Picker.Item label = 'Motivacional' value = 'motivacional'/>
+                                
+                            </Picker>
+
+                        </View>
+
+                        {   
+                            (this.state.type == 'dicas' ||
+                            this.state.type == 'fatos') &&
+
+                            <View>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder = 'Título'
+                                    onChange={this.onChangeTextTitle}
+                                />
+
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder = 'Conteúdo'
+                                    onChange={this.onChangeTextDescription}
+                                />
+                            </View>
+                        }
+                        {   
                             
-                        </Picker>
+                            this.state.type == 'motivacional' &&
+
+                            <View>
+
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder = 'Descrição'
+                                    onChange={this.onChangeTextDescription}
+                                />
+
+                            </View>
+                        }
+
+                    { !!this.state.errorMessage && <Text style = { styles.textError }> { this.state.errorMessage }</Text> }
 
                     </View>
 
-                    {   
-                        (this.state.type == 'dicas' ||
-                        this.state.type == 'fatos') &&
-
-                        <View>
-                            <TextInput
-                                style={styles.input}
-                                placeholder = 'Título'
-                                onChange={this.onChangeTextTitle}
-                            />
-
-                            <TextInput
-                                style={styles.input}
-                                placeholder = 'Conteúdo'
-                                onChange={this.onChangeTextDescription}
-                            />
-                        </View>
-                    }
-                    {   
-                        
-                        this.state.type == 'motivacional' &&
-
-                        <View>
-
-                            <TextInput
-                                style={styles.input}
-                                placeholder = 'Descrição'
-                                onChange={this.onChangeTextDescription}
-                            />
-
-                        </View>
-                    }
-
-                { !!this.state.errorMessage && <Text style = { styles.textError }> { this.state.errorMessage }</Text> }
-
-                </View>
-
-                <View
-                    style={styles.containerButton}
-                >
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => this.createCards(
-                            this.state.title, 
-                            this.state.type, 
-                            this.state.description, 
-                            this.state.link, 
-                            this.state.image
-                        )}
+                    <View
+                        style={styles.containerButton}
                     >
-                        
-                        <Text style = { styles.textbutton }>
-                            CRIAR
-                        </Text>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={() => this.createCards(
+                                this.state.title, 
+                                this.state.type, 
+                                this.state.description, 
+                                this.state.link, 
+                                this.state.image
+                            )}
+                        >
+                            
+                            <Text style = { styles.textbutton }>
+                                CRIAR
+                            </Text>
 
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                    </View>
+
                 </View>
-
-            </View>
+                                   
         );
     }
 };

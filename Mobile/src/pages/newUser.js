@@ -8,7 +8,6 @@ import {
   KeyboardAvoidingView, 
   Text, 
   View,
-  Button,
   ScrollView,
   Alert,
   } from 'react-native';
@@ -173,7 +172,7 @@ const styles = StyleSheet.create({
   button: {
     marginTop:15,
     paddingTop:11,
-    paddingLeft:120,
+    paddingLeft:110,
     marginLeft:29,
     backgroundColor: '#44059E',
     borderRadius: 8,
@@ -190,6 +189,7 @@ const styles = StyleSheet.create({
     color: '#c4342d',
     fontSize: 16,
     fontWeight: 'bold',
+    paddingLeft:125,
   },
   placeholder:{
     borderColor: '#E8E8E8',

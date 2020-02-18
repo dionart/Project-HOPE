@@ -122,11 +122,11 @@ export default class Home extends Component {
             <View style = {styles.noteContainer}>
                 <Image 
                   style = {styles.logo}
-                  source = {require('../pics/sober.png')}
+                  source = {require('../pics/sober2.png')}
                 />
                 <View style = {styles.sendContainer}>
                   <TextInput
-                    placeholder = 'Conte-nos como está sendo'
+                    placeholder = 'Conte-nos como está se sentindo'
                     placeholderTextColor = '#736a86'
                     style = {styles.placeholder}
                     onChange = {this.onChangeTextEmail}

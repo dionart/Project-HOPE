@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import Config from './pages/Config';
 import Cards from './pages/Cards';
 import UpdateCards from './pages/UpdateCards';
+import InfoUser from './pages/InfoUser';
 
 
 export default createStackNavigator({
@@ -33,14 +34,17 @@ export default createStackNavigator({
         screen: Cards
     },
     UpdateCards:{
-        screen : UpdateCards
+        screen: UpdateCards
+    },
+    InfoUser:{
+        screen: InfoUser
     }
 }, {
     navigationOptions:{
         headerStyle: {
             backgroundColor: "#FFF"
         },
-        headerTintColor: "#4B0082"
+        headerTintColor: "#44059E"
     },
 
 }, {

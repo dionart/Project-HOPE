@@ -13,14 +13,17 @@ import {
 
  import api from '../services/api';
 
+
 function wait(timeout) {
     return new Promise(resolve => {
       setTimeout(resolve, timeout);
     });
 }
 
+//Função para edição de cards
 export default class UpdateCards extends Component {
 
+    //Define configurações de header
     static navigationOptions = {
         headerTitle: 'Cards',
         headerTintColor: '#44059E',
@@ -29,6 +32,7 @@ export default class UpdateCards extends Component {
         }
     }
 
+    //Seta estados para null
     state = {
         cards: null,
         loggedInUser: null,
@@ -56,18 +60,21 @@ export default class UpdateCards extends Component {
         } 
     }
 
-
+    //Espera 5 segundos para listar os cards
     getCards = () => {
         wait(5000).then(() => this.setState({isLoading: true})).then(() => this.setState({isLoading: false}));
         this.readCards();
     }
     
+    //Carrega informações dos cards postados
     componentWillMount(){
         this.readCards();
     }
 
+    //Função de delete através do id
     delete = async (id) => {
         const token = await AsyncStorage.getItem('@CodeApi:token');
+        //consome a api
         await api.delete(`/cards/${id}`, {}, { headers: { Authorization: `Bearer ${token}` }});
 
         Alert.alert('Card excluído com sucesso!');
@@ -75,10 +82,12 @@ export default class UpdateCards extends Component {
         this.setState({isUpdateDelete: false});
     }
 
-    update = async (title, type, description, content) => {
+    //Função de update através do id
+    update = async (title, type, description, content, id) => {
         try{
+            
             const token = await AsyncStorage.getItem('@CodeApi:token');
-
+            //consome a api
             await api.put(`/cards/${id}`, {
                 title,
                 type,
@@ -90,9 +99,11 @@ export default class UpdateCards extends Component {
 
         } catch (response) {
             this.setState({ errorMessage: response.data.error });
+            console.log(response);
         }
     }
 
+    //Atualiza em tempo real oque está sendo digitado na input box
     onChangeTextTitle = (event) => {
         this.setState({ title: event.nativeEvent.text });
     };
@@ -101,6 +112,7 @@ export default class UpdateCards extends Component {
         this.setState({ description: event.nativeEvent.text });
     };
 
+    //estilização da pagina mobile
     render(){
         if(!this.state.cards){
             return null;
@@ -108,31 +120,22 @@ export default class UpdateCards extends Component {
         return(
             <View
                 style={{
-                    flex: 1,
-                    backgroundColor: this.state.isUpdateDelete || this.state.isUpdate ? '#0000004d' : '#fff'
+                    flex:1,
+                    backgroundColor: this.state.isUpdateDelete || this.state.isUpdate ? '#33333' : '#fff'
                 }}
             >
-                <FlatList
+                <FlatList 
                     data={this.state.cards}
                     refreshing={this.state.isLoading}
                     onRefresh={this.getCards}
                     renderItem={({ item }) => {
                         return(
-                            <View>   
-                                <View style={styles.containerRow}>   
-                                    <View style={styles.containerInfo}>
-                                        <Text style={styles.textType}>
-                                            {item.type}
-                                        </Text>
-
-                                        <Text style={styles.textDescription}>
-                                            {item.description}
-                                        </Text>
-
-                                    </View>
-
+                            <View style={styles.containerCards}>
+                                {   
+                                    //Define o template dos cards através de seu tipo
+                                    item.type === 'dicas' &&
+                                    
                                     <TouchableOpacity
-                                        style={styles.buttonMore}
                                         onPress={() => {
                                             this.setState({
                                                 isUpdateDelete: true, 
@@ -140,27 +143,119 @@ export default class UpdateCards extends Component {
                                                 title: item.title,
                                                 type: item.type,
                                                 description: item.description,
-                                                link: item.link,
-                                                image: item.image
+                                                content: item.content
                                             });
                                         }}
                                     >
-                                        <Image
-                                            style={styles.imageButton}
-                                            source={require('../pics/dots.png')}
-                                        />
+                                        <View style={styles.dicas}>
+                                            <View style={styles.containerDicas}>
+                                                <View style={styles.containerDicasPic}>
+                                                    <Image
+                                                        source = {require('../pics/dicas.png')}
+                                                        style = { styles.picDicas }
+                                                        resizeMode='center'
+                                                    />
+                                                </View>
 
+                                                <View style={styles.containerDicasDescription}>
+                                                    <Text style={styles.textTitle}>
+                                                        {item.title}
+                                                    </Text>
+                                                    
+                                                    <Text style={styles.textDescription}>
+                                                        {item.description}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                        
+                                        </View>
                                     </TouchableOpacity>
+                                }
+                                {
+                                    //Define o template dos cards através de seu tipo
+                                    item.type === 'fatos' &&
+                                    
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.setState({
+                                                isUpdateDelete: true, 
+                                                idCard: item._id,
+                                                title: item.title,
+                                                type: item.type,
+                                                description: item.description,
+                                                content: item.content,
+                                            });
+                                        }}
+                                    >
+                                    
+                                        <View style={styles.fatos}>
+                                            <View style={styles.containerFatos}>
+                                                <View style={styles.containerDescription}>
+                                                    <Text style={styles.textTitle}>
+                                                        {item.title}
+                                                    </Text>
 
-                                </View>
+                                                    <Text style={styles.textDescription}>
+                                                        {item.description}
+                                                    </Text>
+                                                </View>
+                                                
+                                                <View style={styles.fatosPic}>
+                                                    <Image
+                                                        source = {require('../pics/fatos.png')}
+                                                        style = { styles.containerPicFatos }
+                                                        resizeMode='center'
+                                                    />
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                }
+                                {
+                                    //Define o template dos cards através de seu tipo
+                                    item.type === 'motivacional' &&
+                                    
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.setState({
+                                                isUpdateDelete: true, 
+                                                idCard: item._id,
+                                                title: item.title,
+                                                type: item.type,
+                                                description: item.description,
+                                                content: item.content,
+                                            });
+                                        }}
+                                    >
+                                    
+                                        <View style={styles.containerMotivacional}>
+                                            <View style={styles.containerAspas}>
+                                                <View style={styles.containerAspasPic}>
+                                                    <Image
+                                                        source = {require('../pics/motivacional.png')}
+                                                        style = { styles.picMotivacional }
+                                                        resizeMode='center'
+                                                    />
+                                                </View>
+
+                                                <View style={styles.containerAspasDescription}>
+                                                    <Text style={styles.textMotivacional}>
+                                                        {item.description}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                }
                             </View>
                         );
-
                     }}
                 />
-                {
+                {   
+                    //Abre o menu de seleção se for verdade
                     this.state.isUpdateDelete &&
 
+                    
                     <View style={styles.containerUD}>
                         <TouchableOpacity
                             style={styles.buttonUD}
@@ -189,8 +284,10 @@ export default class UpdateCards extends Component {
                             </Text>
                         </TouchableOpacity>
                     </View>
+                    
                 }
                 {
+                    //Abre o menu para edição do card selecionado
                     this.state.isUpdate &&
 
                     <View style={styles.containerUpdate}>
@@ -204,6 +301,7 @@ export default class UpdateCards extends Component {
                                         {
                                             (item._id == this.state.idCard) &&
 
+                                            
                                             <View>
                                                 { 
                                                     (item.type == 'dicas' ||
@@ -243,8 +341,7 @@ export default class UpdateCards extends Component {
                                                             this.state.title, 
                                                             this.state.type, 
                                                             this.state.description, 
-                                                            this.state.link, 
-                                                            this.state.image,
+                                                            this.state.content,
                                                             this.state.idCard,
                                                         )
                                                     }}
@@ -264,6 +361,7 @@ export default class UpdateCards extends Component {
                                                 </TouchableOpacity>
 
                                             </View>
+                                        
                                         }   
                                     </View>
                                 );
@@ -273,7 +371,8 @@ export default class UpdateCards extends Component {
                     </View>
                  
                 }
-                {
+                {   
+                    //Se o usuário nao criar ou deletar nada, o menu de criação é selecionado
                     !this.state.isUpdateDelete && 
                     !this.state.isUpdate &&
 
@@ -284,7 +383,7 @@ export default class UpdateCards extends Component {
                         >
                             <Image
                                 style={styles.createImage}
-                                source={require('../pics/add.png')}
+                                source={require('../pics/AddFile.png')}
                             />
                         </TouchableOpacity>
                     </View>
@@ -296,16 +395,12 @@ export default class UpdateCards extends Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#FFF',
-    },
     containerRow:{
         flex: 1,
         paddingHorizontal: 10,
         borderBottomWidth: 1,
-        borderColor: '#6667',
-        flexDirection: 'row',
+        borderColor: '#44059E',
+        
         paddingVertical: 8,
     },
     containerInfo: {
@@ -315,11 +410,11 @@ const styles = StyleSheet.create({
     textType: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: 'rgb(62, 6, 136)',
+        color: '#44059E',
     },
     textDescription: {
         fontSize: 18,
-        color: '#6669',
+        color: '#44059E',
     },
     buttonMore: {
         alignItems: 'center',
@@ -385,7 +480,7 @@ const styles = StyleSheet.create({
         width: 350,
     },
     containerButtonCreate: {
-        backgroundColor: '#44059E',
+        backgroundColor: '#FFF',
         width: 60,
         height: 60,
         position: 'absolute',
@@ -400,10 +495,134 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         height: '100%',
         width: '100%',
-        backgroundColor: '#44059E',
+        backgroundColor: '#FFF',
     },
     createImage: {
-        height: 25,
-        width: 25,
+        marginLeft:8,
+        height: 40,
+        width: 40,
+    },
+    dicas: {
+        height: 150,
+        marginHorizontal: 7,
+        borderRadius: 15,
+        borderWidth: 1,
+        borderColor: '#E4E4E4',
+        backgroundColor: '#FFF',
+    },  
+    containerDicas: {
+        flexDirection:'row-reverse',
+        marginRight: 25,
+    },
+    containerDicasPic: {
+        width: 120,
+        height: 200,
+        borderRadius: 25,
+    },
+    containerDicasDescription: {
+        flex: 1,
+        height: 200,
+        borderRadius: 25,
+    },
+    containerCards:{
+        width:400,
+        height:150,
+        
+    },
+    containerPicFatos: {
+        width: 110,
+        height: 130,
+    },
+    button:{
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 320,
+        height: 43,
+        borderRadius: 20,
+    },
+    textButton: {
+        fontWeight: 'bold',
+        fontSize: 14,
+        color: '#4B0082',
+    },
+    textTitle: {
+        fontWeight: 'bold',
+        fontSize: 22,
+        paddingTop: 20,
+        color: '#334',
+    },
+    textDescription: {
+        fontSize: 18,
+        paddingTop: 10,
+        color: '#333',
+    },
+    fatos: {
+        height: 150,
+        marginHorizontal: 7,
+        borderRadius: 15,
+        borderWidth: 1,
+        borderColor: '#E4E4E4',
+        backgroundColor: '#FFF',
+    },  
+    containerFatos: {
+        flexDirection: 'row',
+        borderRadius: 25,
+        marginLeft: 10,
+        marginBottom: 10,
+    },
+    fatosPic: {
+        width: 110,
+        height: 200,
+        borderRadius: 25,
+        marginRight: 10,
+    },
+    containerDescription: {
+        height: 200,
+        flex: 2,
+        borderRadius: 25,
+        paddingLeft: 10,
+    },
+    picDicas: {
+        width: 140,
+        height: 140,
+    },
+    containerMotivacional: {
+        alignItems: 'center',
+        height: 150,
+        marginHorizontal: 7,
+        borderRadius: 15,
+        borderWidth: 1,
+        backgroundColor: '#44059E',
+    },
+    containerAspas: {
+        alignItems: 'center',
+        flexDirection: 'row-reverse',
+        borderRadius: 25,
+    },
+    containerAspasPic: {
+        alignItems: 'center',
+        height: 150,
+        paddingLeft:20,
+        paddingRight:15,
+        borderRadius: 25,
+    },
+    containerAspasDescription: {
+        height: 200,
+        flex: 2,
+        borderRadius: 25,
+        marginRight: 20,
+        marginLeft: 20,
+        paddingTop: 15,
+    },
+    picMotivacional: {
+        width: 70,
+        height: 60,
+    },
+    textMotivacional:{
+        textAlign: 'left',
+        fontWeight: 'bold',
+        fontSize: 22,
+        paddingTop: 10,
+        color: '#FFF',
     },
 });

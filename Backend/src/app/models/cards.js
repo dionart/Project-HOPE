@@ -4,7 +4,6 @@ const mongoose = require('../../database');
 const CardsSchema = new mongoose.Schema({
     title: {
         type: String,
-        require: true,
         unique: true,
     },
     type: {

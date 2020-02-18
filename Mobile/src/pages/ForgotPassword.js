@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 
 import { 
-  Platform,
   StyleSheet,
   Image,
   TextInput,
@@ -9,9 +8,6 @@ import {
   Scrollview, 
   Text, 
   View,
-  Button,
-  StatusBar,
-  ActivityIndicator,
   AsyncStorage,
   KeyboardAvoidingView,
   Alert,
@@ -173,7 +169,7 @@ const styles = StyleSheet.create({
   button: {
     marginTop:15,
     paddingTop:11,
-    paddingLeft:108,
+    paddingLeft:102,
     backgroundColor: '#44059E',
     borderRadius: 8,
     marginLeft:29,
@@ -187,7 +183,7 @@ const styles = StyleSheet.create({
   },
   errorText:{
     color: '#c4342d',
-    paddingLeft:100,
+    paddingLeft:115,
     fontSize: 16,
     fontWeight: 'bold',
   },

@@ -16,6 +16,7 @@ import api from '../services/api';
 
 export default class Config extends Component {
 
+    //Configura o header
     static navigationOptions = {
         title: 'Configurações',
         headerTintColor: '#4B0082',
@@ -24,6 +25,7 @@ export default class Config extends Component {
         }
     };
     
+    //Seta os estados para null
     state = {
         cards: null,
         loggedInUser: null,
@@ -31,7 +33,7 @@ export default class Config extends Component {
     };
 
     getPermissionAsync = async () => {
-        
+        //Espera o usuário conceder permissão de acesso a galeria
         const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
         
         if (status !== 'granted') {
@@ -39,6 +41,7 @@ export default class Config extends Component {
         }
     }
     
+    //Carrega o usuario para setar o campo user e sua imagem
     async componentDidMount() {
         const user = JSON.parse(await AsyncStorage.getItem('@CodeApi:user'));
 
@@ -48,9 +51,10 @@ export default class Config extends Component {
     };
 
     
-    
+    //Função de upload de imagens
     updatePicture = async (id) => {
         try{
+            //aguarda o upload da imagem da galeria
             let result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.All,
                 allowsEditing: true,
@@ -62,11 +66,13 @@ export default class Config extends Component {
             if (!result.cancelled) {
               this.setState({ pic: result.uri });
             }
-        
+            
+            //define a imagem atual
             const pic = this.state.pic;
             const token = await AsyncStorage.getItem('@CodeApi:token');
             const user = this.state.loggedInUser;
             
+            //Se o usuario possuir uma imagem já cadastrada ela será carregada ao logar-se
             if(user.pic){
                 user.pic = `data:image/jpeg;base64,${pic}`;
             }
@@ -108,7 +114,7 @@ export default class Config extends Component {
 
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => this.props.navigation.navigate('UserInfo')}
+                    onPress={() => this.props.navigation.navigate('InfoUser')}
                 >
                     <Text style={styles.textButton}>
                         INFORMAÇÕES PESSOAIS
@@ -123,8 +129,10 @@ export default class Config extends Component {
                         MUDAR FOTO DE PERFIL
                     </Text>
                 </TouchableOpacity>
-            
+
+                
                 {this.state.loggedInUser && 
+                //Menu disponível apenas para administradores
                  this.state.loggedInUser.isAdmin &&
                     <TouchableOpacity
                         style={styles.button}
@@ -162,7 +170,7 @@ const styles = StyleSheet.create({
         height: 200,
         borderRadius: 100,
         borderWidth: 10,
-        borderColor: 'rgb(62, 6, 136)'
+        borderColor: '#44059E'
     },
     button: {
         alignItems: 'center',
@@ -172,7 +180,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         width: 350,
         height: 42,
-        backgroundColor: '#4B0082',
+        backgroundColor: '#44059E',
     },
     textButton: {
         fontWeight: 'bold',

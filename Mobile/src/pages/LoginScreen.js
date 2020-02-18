@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   button: {
     marginTop:15,
     paddingTop:11,
-    paddingLeft:139,
+    paddingLeft:132,
     backgroundColor: '#44059E',
     borderRadius: 8,
     height:50,
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     color:'#999999',
     fontWeight:'bold',
-    marginLeft:100,
+    marginLeft:110,
   },
   newUserButton:{
     borderColor: '#44059E',

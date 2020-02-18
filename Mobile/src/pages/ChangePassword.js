@@ -1,17 +1,13 @@
 import React, {Component} from 'react';
 
 import { 
-  Platform,
   StyleSheet,
   Image,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback, 
   Text, 
   View,
-  Button,
   KeyboardAvoidingView,
-  ActivityIndicator,
   AsyncStorage,
   Alert,
   ScrollView,
@@ -214,7 +210,7 @@ const styles = StyleSheet.create({
   errorText:{
     color: '#c4342d',
     fontSize: 16,
-    paddingLeft:100,
+    paddingLeft:140,
     fontWeight: 'bold',
   },
   placeholder:{
