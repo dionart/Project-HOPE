@@ -29,6 +29,7 @@ export default class Home extends Component {
   constructor(props){
     super(props);
 
+    //construtor da classe home usado para atualizar a pagina do usuário
     const didWillFocusSubscription = this.props.navigation.addListener(
       'willFocus', async (payLoad) => {
         const user = JSON.parse(await AsyncStorage.getItem('@CodeApi:user'));
