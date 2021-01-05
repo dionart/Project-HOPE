@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "apisauce": "^1.1.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "expo": "~36.0.0",
     "expo-cli": "^3.13.1",
     "expo-image-picker": "^8.0.2",
